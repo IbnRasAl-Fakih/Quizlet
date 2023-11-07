@@ -1,40 +1,48 @@
 package main
 
 import (
-	"fmt"
 	"time"
 )
 
-type TimeLimitDecorator struct {
-	questionStrategy QuestionStrategy
-	timeLimit        int
+type QuestionDecorator interface {
+	QuestionStrategy
+	askQuestion() string
+	evaluateAnswer() int
 }
 
-func NewTimeLimitDecorator(questionStrategy QuestionStrategy, timeLimit int) *TimeLimitDecorator {
-	return &TimeLimitDecorator{
-		questionStrategy: questionStrategy,
-		timeLimit:        timeLimit,
-	}
+// decorator 1
+// Concrete decorator - TimerDecorator
+
+type TimerDecorator struct {
+	//question  QuestionStrategy
+	decorator QuestionStrategy
+	timeLimit int
 }
 
-func (td *TimeLimitDecorator) AskQuestion() string {
-	return td.questionStrategy.AskQuestion()
+func (t *TimerDecorator) askQuestion() string {
+	timerMessage := "You have 30 seconds to answer the question."
+	return timerMessage + "\n" + t.decorator.askQuestion()
 }
 
-func (td *TimeLimitDecorator) EvaluateAnswer(answer string) int {
+func (t *TimerDecorator) evaluateAnswer() int {
+	t0 := time.Now()
+	result := t.decorator.evaluateAnswer()
+	t1 := time.Now()
 
-	startTime := time.Now()
-	fmt.Println("Start time:", startTime)
-	result := td.questionStrategy.EvaluateAnswer(answer)
-	endTime := time.Since(startTime)
-	fmt.Println("End time:", startTime)
-	fmt.Println("Time elapsed:", endTime)
-	if (endTime.Nanoseconds()) > time.Duration(td.timeLimit).Nanoseconds() {
+	elapsed := t1.Sub(t0)
+	if (elapsed) > time.Duration(t.timeLimit)*time.Second {
 		result = 0
 	}
 	fmt.Println(time.Duration(td.timeLimit).Nanoseconds())
 	return result
 }
+
+//func NewTimedQuestion(question QuestionStrategy, timeLimit int) QuestionDecorator {
+//	return &TimerDecorator{
+//		question:  question,
+//		timeLimit: timeLimit,
+//	}
+//}
 
 //type QuestionDecorator interface {
 //	AskQuestion() string

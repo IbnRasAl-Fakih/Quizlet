@@ -7,8 +7,8 @@ import (
 )
 
 type QuestionStrategy interface {
-	AskQuestion() string
-	EvaluateAnswer(answer string) int
+	askQuestion() string
+	evaluateAnswer() int
 }
 
 type MultipleChoiceQuestion struct {
@@ -25,8 +25,8 @@ func NewMultipleChoiceQuestion(question string, choices []string, answer int) *M
 	}
 }
 
-func (q *MultipleChoiceQuestion) AskQuestion() string {
-	question := fmt.Sprintf("Вопрос: %s\n", q.Question)
+func (m *MultipleChoiceQuestion) askQuestion() string {
+	question := fmt.Sprintf("Вопрос: %s\n", m.Question)
 
 	choices := ""
 	for i, choice := range q.Choices {
@@ -37,8 +37,8 @@ func (q *MultipleChoiceQuestion) AskQuestion() string {
 
 }
 
-func (q *MultipleChoiceQuestion) EvaluateAnswer(answer string) int {
-	num, err := strconv.Atoi(answer)
+func (m *MultipleChoiceQuestion) evaluateAnswer() int {
+	num, err := strconv.Atoi(takeAnswer())
 
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -97,8 +97,9 @@ func (q *OpenEndedQuestion) AskQuestion() string {
 	return fmt.Sprintf("Вопрос: %s\n", q.Question)
 }
 
-func (q *OpenEndedQuestion) EvaluateAnswer(answer string) int {
-	userAnswer := strings.ToLower(answer)
+func (q *OpenEndedQuestion) evaluateAnswer() int {
+
+	userAnswer := strings.ToLower(takeAnswer())
 	correctAnswer := strings.ToLower(q.CorrectAnswer)
 
 	if userAnswer == correctAnswer {
