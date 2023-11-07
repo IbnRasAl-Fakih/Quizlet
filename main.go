@@ -76,6 +76,7 @@ func main() {
 			score := quizWithQ.evaluateAnswer()
 			fmt.Println("Заработанные баллы", score)
 			user.score += score
+			fmt.Println(username)
 		case 2:
 			//randomNum := rand.Intn(len(openEndedQuestions))
 			//quiz.setQuestionType(NewOpenEndedQuestionProxy(&openEndedQuestions[randomNum], &user))
