@@ -29,7 +29,7 @@ func (m *MultipleChoiceQuestion) askQuestion() string {
 	question := fmt.Sprintf("Вопрос: %s\n", m.Question)
 
 	choices := ""
-	for i, choice := range q.Choices {
+	for i, choice := range m.Choices {
 		choices += fmt.Sprintf("%d. %s\n", i+1, choice)
 	}
 
@@ -44,7 +44,7 @@ func (m *MultipleChoiceQuestion) evaluateAnswer() int {
 		fmt.Println("Error:", err)
 		return 0
 	}
-	if num == q.CorrectAnswerIndex+1 {
+	if num == m.CorrectAnswerIndex+1 {
 		return 1
 	}
 
@@ -63,11 +63,12 @@ func NewTrueFalseQuestion(question string, answer bool) *TrueFalseQuestion {
 	}
 }
 
-func (t *TrueFalseQuestion) AskQuestion() string {
+func (t *TrueFalseQuestion) askQuestion() string {
 	return fmt.Sprintf("Вопрос: %s (True/False)\n", t.Question)
 }
 
-func (t *TrueFalseQuestion) EvaluateAnswer(answer string) int {
+func (t *TrueFalseQuestion) evaluateAnswer() int {
+	answer := takeAnswer()
 	answer = strings.ToLower(strings.TrimSpace(answer))
 
 	correctAnswer := t.CorrectAnswer
@@ -93,12 +94,17 @@ func NewOpenEndedQuestion(question string, answer string) *OpenEndedQuestion {
 	}
 }
 
-func (q *OpenEndedQuestion) AskQuestion() string {
+func takeAnswer() string {
+	var answer string
+	fmt.Scanln(&answer)
+	return answer
+}
+
+func (q *OpenEndedQuestion) askQuestion() string {
 	return fmt.Sprintf("Вопрос: %s\n", q.Question)
 }
 
 func (q *OpenEndedQuestion) evaluateAnswer() int {
-
 	userAnswer := strings.ToLower(takeAnswer())
 	correctAnswer := strings.ToLower(q.CorrectAnswer)
 

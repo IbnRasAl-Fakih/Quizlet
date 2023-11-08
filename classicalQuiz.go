@@ -8,10 +8,10 @@ func (c *classicalQuiz) setQuestionType(questionType QuestionStrategy) {
 	c.questionType = questionType
 }
 
-func (c *classicalQuiz) AskQuestion() string {
-	return c.questionType.AskQuestion()
+func (c *classicalQuiz) askQuestion() string {
+	return c.questionType.askQuestion()
 }
 
-func (c *classicalQuiz) EvaluateAnswer(answer string) int {
-	return c.questionType.EvaluateAnswer(answer)
+func (c *classicalQuiz) evaluateAnswer() int {
+	return c.questionType.evaluateAnswer()
 }

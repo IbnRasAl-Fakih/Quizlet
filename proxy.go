@@ -6,21 +6,23 @@ type QuizProxy struct {
 	minScore int
 }
 
-func (q *QuizProxy) Proxy(quiz QuestionStrategy, user *User, minscore int) {
-	q.quiz = quiz
-	q.user = user
-	q.minScore = minscore
+func Proxy(quiz QuestionStrategy, user *User, minScore int) *QuizProxy {
+	return &QuizProxy{
+		quiz:     quiz,
+		user:     user,
+		minScore: minScore,
+	}
 }
 
 func (q *QuizProxy) askQuestion() string {
-	if q.user.score > q.minScore {
+	if q.user.score >= q.minScore {
 		return q.quiz.askQuestion()
 	}
-	return "Извините, у вас недостаточно баллов, чтобы пройти тест. Пожалуйста, наберите больше баллов, чтобы продолжить."
+	return "Error"
 }
 
 func (q *QuizProxy) evaluateAnswer() int {
-	if q.user.score > q.minScore {
+	if q.user.score >= q.minScore {
 		score := q.quiz.evaluateAnswer()
 		if score > 0 {
 			q.user.score += score
